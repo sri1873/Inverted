@@ -2,7 +2,6 @@ package com.portfolio.inverted.entity;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.Generated;
 import lombok.Getter;
 
 import java.util.List;

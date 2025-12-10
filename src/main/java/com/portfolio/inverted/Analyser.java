@@ -20,6 +20,6 @@ public class Analyser {
         return document;
     }
     public void dateFinder(String line){
-
+        //for future implementation
     }
 }
