@@ -5,15 +5,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Indexer {
 
-  private static Logger log= LoggerFactory.getLogger(Indexer.class);
-    HashMap<String,List<Posting>>index=new HashMap<>();
+    private static Logger log= LoggerFactory.getLogger(Indexer.class);
+    public static final HashMap<String,List<Posting>>index=new HashMap<>();
+
     public void createIndex(List<String> document, Integer docId,Integer position) {
         for (String term : document) {
             List<Posting> postings = index.computeIfAbsent(term, k -> new ArrayList<>());
@@ -32,5 +30,18 @@ public class Indexer {
         for(Map.Entry<String, List<Posting>> entry: index.entrySet()){
             log.info(entry.getKey() + ":"+ entry.getValue());
         }
+    }
+    public List<Integer> search(String query){
+        HashSet<Integer> documents= new HashSet<>();
+        String[] words = query.toLowerCase().split(" ");
+        for(String word:words){
+            if(index.containsKey(word)){
+                List<Posting> postings = index.get(word);
+                for(Posting p:postings){
+                    documents.add(p.getDocumentId());
+                }
+            }
+        }
+        return documents.stream().toList();
     }
 }
