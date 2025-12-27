@@ -4,12 +4,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 
-import java.util.List;
+
+import java.util.Set;
 
 @Data
 @Getter
 @Builder
 public class Posting {
     private Integer documentId;
-    private List<Integer> position;
+    private Set<Integer> position;
 }
