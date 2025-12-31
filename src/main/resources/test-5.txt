@@ -1,0 +1,3 @@
+High throughput systems require careful capacity planning.
+Distributed architectures introduce complexity in consistency and reliability.
+Monitoring and metrics help detect performance issues.

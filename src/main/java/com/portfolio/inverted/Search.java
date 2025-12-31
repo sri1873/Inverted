@@ -1,9 +1,11 @@
 package com.portfolio.inverted;
 
 import com.portfolio.inverted.entity.Posting;
+import com.portfolio.inverted.utils.InvertedIndex;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -11,25 +13,29 @@ import java.util.List;
 public class Search {
 
     private final InvertedIndex invertedIndex;
+    private Scorer scorer;
 
-    public Search(InvertedIndex invertedIndex) {
+    public Search(InvertedIndex invertedIndex, Scorer scorer) {
         this.invertedIndex = invertedIndex;
+        this.scorer=scorer;
     }
 
-
-    public List<Integer> search(String query) {
-        HashSet<Integer> documents = new HashSet<>();
+    public List<Integer> termSearch(String query) {
+        HashMap<String, List<Posting>> documents = new HashMap<>();
         String[] words = query.toLowerCase().split(" ");
+
         for (String word : words) {
             if (invertedIndex.containsTerm(word)) {
-                List<Posting> postings = invertedIndex.getPosting(word);
-                for (Posting p : postings) {
-                    documents.add(p.getDocumentId());
-                }
+                documents.put(word, invertedIndex.getPosting(word));
             }
         }
-        return documents.stream().toList();
+
+        HashMap<Integer, Double> results = scorer.tfIdf(documents);
+
+        results.entrySet().forEach(System.out::println);
+        return results.keySet().stream().toList();
     }
+
 
     public List<Integer> phraseSearch(String query) {
         String[] words = query.toLowerCase().split(" ");
@@ -76,4 +82,5 @@ public class Search {
 
         return documents.stream().toList();
     }
+
 }

@@ -1,6 +1,7 @@
 package com.portfolio.inverted;
 
 import com.portfolio.inverted.entity.Posting;
+import com.portfolio.inverted.utils.InvertedIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -21,16 +22,18 @@ public class Indexer {
         this.invertedIndex = invertedIndex;
     }
 
-    public void createIndex(List<String> document, Integer docId, Integer position) {
+    public void createIndex(List<String> document, Integer docId) {
         Map<String, List<Posting>> index = invertedIndex.getIndex();
+        Integer position = 0;
         for (String term : document) {
             List<Posting> postings = index.computeIfAbsent(term, k -> new ArrayList<>());
             Posting posting = postings.stream().filter(p -> p.getDocumentId().equals(docId)).findFirst().orElse(null);
             if (posting == null) {
-                posting = Posting.builder().documentId(docId).position(new HashSet<>()).build();
+                posting = Posting.builder().termFrequency(0).documentLength(document.size()).documentId(docId).position(new HashSet<>()).build();
                 postings.add(posting);
             }
             posting.getPosition().add(position);
+            posting.setTermFrequency(posting.getTermFrequency() + 1);
             position++;
         }
     }

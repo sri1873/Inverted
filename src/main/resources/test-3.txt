@@ -1,0 +1,3 @@
+Search engines build an inverted index to map terms to documents.
+TF IDF and BM25 are scoring models used for ranking.
+Lucene is a popular search library.

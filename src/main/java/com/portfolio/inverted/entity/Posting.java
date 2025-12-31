@@ -12,4 +12,6 @@ import java.util.Set;
 public class Posting {
     private Integer documentId;
     private Set<Integer> position;
+    private Integer termFrequency;
+    private Integer documentLength;
 }

@@ -1,0 +1,3 @@
+Modern search systems support phrase queries and boolean logic.
+An inverted index stores postings lists with term positions.
+Ranking determines which documents are most relevant.

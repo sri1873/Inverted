@@ -1,0 +1,3 @@
+Distributed systems rely on message queues for reliable communication.
+Kafka provides durable logs and supports consumer groups.
+Offsets allow consumers to track progress.
