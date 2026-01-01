@@ -12,7 +12,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class FileProcessor {
@@ -28,7 +27,7 @@ public class FileProcessor {
     }
 
     public void readFile(List<String> paths) throws FileNotFoundException {
-        int countfordocid=0;
+        int countfordocid = 0;
         for (String path : paths) {
             FileReader file = new FileReader(path);
             Integer docId = ++countfordocid;
@@ -38,7 +37,7 @@ public class FileProcessor {
                 while ((line = reader.readLine()) != null) {
                     document.addAll(analyser.onlyWords(line));
                 }
-                addFileToFileIndex(path,docId,document.size());
+                addFileToFileIndex(path, docId, document.size());
                 indexer.createIndex(document, docId);
 
 
@@ -49,9 +48,7 @@ public class FileProcessor {
     }
 
     private void addFileToFileIndex(String path, Integer docId, int size) {
-        Map<Integer, FileDetails> index = fileIndex.getIndex();
-        index.computeIfAbsent(docId,
-                k->FileDetails.builder().filePath(path).fileLength(size).build());
+        fileIndex.addDocument(docId, FileDetails.builder().filePath(path).fileLength(size).build());
     }
 
 }

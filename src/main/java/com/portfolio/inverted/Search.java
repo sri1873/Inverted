@@ -17,7 +17,7 @@ public class Search {
 
     public Search(InvertedIndex invertedIndex, Scorer scorer) {
         this.invertedIndex = invertedIndex;
-        this.scorer=scorer;
+        this.scorer = scorer;
     }
 
     public List<Integer> termSearch(String query) {
@@ -30,10 +30,14 @@ public class Search {
             }
         }
 
-        HashMap<Integer, Double> results = scorer.tfIdf(documents);
+        HashMap<Integer, Double> resultstf = scorer.tfIdf(documents);
+        HashMap<Integer, Double> resultsbm = scorer.bm25(documents);
 
-        results.entrySet().forEach(System.out::println);
-        return results.keySet().stream().toList();
+        System.out.println("TF-IDF");
+        resultstf.entrySet().forEach(System.out::println);
+        System.out.println("BM25");
+        resultsbm.entrySet().forEach(System.out::println);
+        return resultstf.keySet().stream().toList();
     }
 
 
