@@ -40,7 +40,7 @@ public class AppRunner implements CommandLineRunner {
         System.out.println("enter query:");
         String query = scanner.nextLine();
 
-        List<Integer> res = search.termSearch(query);
+        List<Integer> res = search.booleanAndSearch(query);
         if (res.isEmpty()) {
             System.out.println("not found");
         } else {
