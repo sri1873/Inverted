@@ -14,6 +14,7 @@ import java.util.List;
 @Builder
 public class ParsedQuery {
     private List<String> terms;
+
     private List<String> notTerms;
     private SearchTypes searchType;
 }

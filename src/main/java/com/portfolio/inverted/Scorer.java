@@ -1,11 +1,14 @@
 package com.portfolio.inverted;
 
+import com.portfolio.inverted.dto.SearchResponse;
 import com.portfolio.inverted.entity.Posting;
 import com.portfolio.inverted.utils.FileIndex;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class Scorer {
@@ -16,7 +19,7 @@ public class Scorer {
         this.fileIndex = fileIndex;
     }
 
-    public HashMap<Integer, Double> tfIdf(HashMap<String, List<Posting>> documents) {
+    public List<SearchResponse> tfIdf(HashMap<String, List<Posting>> documents) {
         HashMap<Integer, Double> scores = new HashMap<>();
         for (String term : documents.keySet()) {
             List<Posting> postings = documents.get(term);
@@ -27,12 +30,19 @@ public class Scorer {
                 scores.put(p.getDocumentId(), scores.getOrDefault(p.getDocumentId(), 0.0) + tfidf);
             }
         }
-        resSort(scores);
-        return scores;
+
+        List<SearchResponse> result= new ArrayList<>();
+        for (Map.Entry<Integer,Double> entry : scores.entrySet()){
+            SearchResponse searchResponse = SearchResponse.builder().score(entry.getValue()).documentId(entry.getKey()).build();
+            result.add(searchResponse);
+        }
+        return result;
+
     }
 
-    public HashMap<Integer, Double> bm25(HashMap<String, List<Posting>> documents) {
+    public List<SearchResponse> bm25(HashMap<String, List<Posting>> documents) {
         HashMap<Integer, Double> scores = new HashMap<>();
+
         double k1 = 1.5;
         double b = 0.75;
 
@@ -48,7 +58,12 @@ public class Scorer {
             }
 
         }
-        return scores;
+            List<SearchResponse> result= new ArrayList<>();
+            for (Map.Entry<Integer,Double> entry : scores.entrySet()){
+                SearchResponse searchResponse = SearchResponse.builder().score(entry.getValue()).documentId(entry.getKey()).build();
+                result.add(searchResponse);
+            }
+        return result;
     }
 
 

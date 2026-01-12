@@ -13,10 +13,7 @@ public class QueryParser {
 
         ParsedQuery parsedQuery = new ParsedQuery();
         parsedQuery.setSearchType(SearchTypes.valueOf(query.getSearchType()));
-
-        if (query.getSearchType().equalsIgnoreCase("PHRASE")) parsedQuery.setTerms(List.of(query.getQuery()));
-        else
-            parsedQuery.setTerms(Arrays.stream(query.getQuery().toLowerCase().split(" ")).toList());
+        parsedQuery.setTerms(Arrays.stream(query.getQuery().toLowerCase().split(" ")).toList());
 
         if (!query.getNotQuery().isEmpty() && (query.getSearchType().equalsIgnoreCase("BOOLEAN_OR_NOT") || query.getSearchType().equalsIgnoreCase("BOOLEAN_AND_NOT"))) {
             parsedQuery.setNotTerms(Arrays.stream(query.getNotQuery().toLowerCase().split(" ")).toList());

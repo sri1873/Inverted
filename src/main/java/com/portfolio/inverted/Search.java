@@ -1,5 +1,6 @@
 package com.portfolio.inverted;
 
+import com.portfolio.inverted.dto.SearchResponse;
 import com.portfolio.inverted.entity.ParsedQuery;
 import com.portfolio.inverted.entity.Posting;
 import com.portfolio.inverted.utils.InvertedIndex;
@@ -20,22 +21,20 @@ public class Search {
         this.scorer = scorer;
     }
 
-    public List<Integer> initiateSearch(ParsedQuery query) {
+    public List<SearchResponse> initiateSearch(ParsedQuery query) {
 
         switch (query.getSearchType()) {
-            case BOOLEAN_AND:
-                return booleanAndSearch(query);
-            case BOOLEAN_AND_NOT:
+            case BOOLEAN_AND, BOOLEAN_AND_NOT:
                 return booleanAndSearch(query);
             case PHRASE_SEARCH:
-                return phraseSearch(query.getTerms().get(0));
+                return phraseSearch(query);
             default:
                 return booleanOrSearch(query);
         }
     }
 
 
-    private List<Integer> booleanOrSearch(ParsedQuery query) {
+    private List<SearchResponse> booleanOrSearch(ParsedQuery query) {
         HashMap<String, List<Posting>> documents = new HashMap<>();
         HashSet<Integer> unionIds = new HashSet<>();
         List<String> terms = query.getTerms();
@@ -52,17 +51,13 @@ public class Search {
             documents.put(term, postings);
         }
 
-        HashMap<Integer, Double> resultstf = scorer.tfIdf(documents);
-        HashMap<Integer, Double> resultsbm = scorer.bm25(documents);
+        List<SearchResponse> resultstf = scorer.tfIdf(documents);
+        List<SearchResponse> resultsbm = scorer.bm25(documents);
 
-        System.out.println("TF-IDF");
-        resultstf.entrySet().forEach(System.out::println);
-        System.out.println("BM25");
-        resultsbm.entrySet().forEach(System.out::println);
-        return resultstf.keySet().stream().toList();
+        return resultstf;
     }
 
-    private List<Integer> booleanAndSearch(ParsedQuery query) {
+    private List<SearchResponse> booleanAndSearch(ParsedQuery query) {
         HashSet<Integer> commonIds = new HashSet<>();
         List<String> terms = query.getTerms();
         for (String term : terms) {
@@ -85,14 +80,10 @@ public class Search {
             documents.put(term, postings);
         }
 
-        HashMap<Integer, Double> resultstf = scorer.tfIdf(documents);
-        HashMap<Integer, Double> resultsbm = scorer.bm25(documents);
+        List<SearchResponse> resultstf = scorer.tfIdf(documents);
+        List<SearchResponse> resultsbm = scorer.bm25(documents);
 
-        System.out.println("TF-IDF");
-        resultstf.entrySet().forEach(System.out::println);
-        System.out.println("BM25");
-        resultsbm.entrySet().forEach(System.out::println);
-        return resultstf.keySet().stream().toList();
+        return resultstf;
     }
 
     private Set<Integer> booleanNotSearch(List<String> terms, Set<Integer> resultIds) {
@@ -105,18 +96,18 @@ public class Search {
         return resultIds;
     }
 
-    private List<Integer> phraseSearch(String query) {
-        String[] words = query.toLowerCase().split(" ");
-        String anchorWord = words[0];
-        for (String word : words) {
+    private List<SearchResponse> phraseSearch(ParsedQuery query) {
+        List<String> terms = query.getTerms();
+        String anchorWord = terms.get(0);
+        for (String word : terms) {
             if (invertedIndex.containsTerm(word)) {
                 if (invertedIndex.getPosting(word).size() < invertedIndex.getPosting(anchorWord).size())
                     anchorWord = word;
             } else return new ArrayList<>();
         }
         int anchorIndex = -1;
-        for (int i = 0; i < words.length; i++) {
-            if (words[i].equals(anchorWord)) {
+        for (int i = 0; i < terms.size(); i++) {
+            if (terms.get(i).equals(anchorWord)) {
                 anchorIndex = i;
                 break;
             }
@@ -127,10 +118,10 @@ public class Search {
 
             for (int pos : anchorPosting.getPosition()) {
                 boolean match = true;
-                for (int i = 0; i < words.length; i++) {
+                for (int i = 0; i < terms.size(); i++) {
                     if (i == anchorIndex) continue;
                     int requiredPos = pos + (i - anchorIndex);
-                    Posting p = invertedIndex.getPosting(words[i]).stream().filter(posting -> posting.getDocumentId().equals(docId)).findFirst().orElse(null);
+                    Posting p = invertedIndex.getPosting(terms.get(i)).stream().filter(posting -> posting.getDocumentId().equals(docId)).findFirst().orElse(null);
 
                     if (p == null || !p.getPosition().contains(requiredPos)) {
                         match = false;
@@ -144,7 +135,12 @@ public class Search {
             }
 
         }
+        List<SearchResponse> result= new ArrayList<>();
+        for (Integer id:documents){
+            SearchResponse searchResponse = SearchResponse.builder().documentId(id).build();
+            result.add(searchResponse);
+        }
+        return result;
 
-        return documents.stream().toList();
     }
 }
