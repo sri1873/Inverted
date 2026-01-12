@@ -1,17 +1,17 @@
-package com.portfolio.inverted;
+package com.portfolio.inverted.service;
 
 import com.portfolio.inverted.entity.Posting;
 import com.portfolio.inverted.utils.InvertedIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Service
 public class Indexer {
 
     private static Logger log = LoggerFactory.getLogger(Indexer.class);

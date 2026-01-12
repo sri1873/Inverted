@@ -1,4 +1,4 @@
-package com.portfolio.inverted;
+package com.portfolio.inverted.service;
 
 import org.springframework.stereotype.Service;
 

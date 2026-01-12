@@ -1,16 +1,16 @@
-package com.portfolio.inverted;
+package com.portfolio.inverted.service;
 
 import com.portfolio.inverted.dto.SearchResponse;
 import com.portfolio.inverted.entity.ParsedQuery;
 import com.portfolio.inverted.entity.Posting;
 import com.portfolio.inverted.utils.InvertedIndex;
 import com.portfolio.inverted.utils.SearchTypes;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 public class Search {
 
     private final InvertedIndex invertedIndex;
@@ -135,8 +135,8 @@ public class Search {
             }
 
         }
-        List<SearchResponse> result= new ArrayList<>();
-        for (Integer id:documents){
+        List<SearchResponse> result = new ArrayList<>();
+        for (Integer id : documents) {
             SearchResponse searchResponse = SearchResponse.builder().documentId(id).build();
             result.add(searchResponse);
         }

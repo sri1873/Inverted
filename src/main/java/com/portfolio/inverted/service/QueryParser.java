@@ -1,12 +1,13 @@
-package com.portfolio.inverted;
+package com.portfolio.inverted.service;
 
 import com.portfolio.inverted.dto.InputQuery;
 import com.portfolio.inverted.entity.ParsedQuery;
 import com.portfolio.inverted.utils.SearchTypes;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.List;
 
+@Service
 public class QueryParser {
 
     public ParsedQuery parseQuery(InputQuery query) {

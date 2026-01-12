@@ -1,4 +1,4 @@
-package com.portfolio.inverted;
+package com.portfolio.inverted.service;
 
 import com.portfolio.inverted.entity.FileDetails;
 import com.portfolio.inverted.utils.FileIndex;

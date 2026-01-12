@@ -1,13 +1,12 @@
 package com.portfolio.inverted.config;
 
-import com.portfolio.inverted.FileProcessor;
-import com.portfolio.inverted.Search;
+import com.portfolio.inverted.service.FileProcessor;
+import com.portfolio.inverted.service.Search;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Scanner;
 
 @Component
 public class AppRunner implements CommandLineRunner {
@@ -36,16 +35,6 @@ public class AppRunner implements CommandLineRunner {
             throw new RuntimeException(e);
         }
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("enter query:");
-        String query = scanner.nextLine();
-
-//        List<Integer> res = search.booleanAndSearch(query, query.getSearchType());
-//        if (res.isEmpty()) {
-//            System.out.println("not found");
-//        } else {
-//            res.forEach(System.out::println);
-//        }
     }
 
 }

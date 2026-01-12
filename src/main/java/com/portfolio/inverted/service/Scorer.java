@@ -1,16 +1,16 @@
-package com.portfolio.inverted;
+package com.portfolio.inverted.service;
 
 import com.portfolio.inverted.dto.SearchResponse;
 import com.portfolio.inverted.entity.Posting;
 import com.portfolio.inverted.utils.FileIndex;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Service
 public class Scorer {
 
     private final FileIndex fileIndex;
@@ -31,8 +31,8 @@ public class Scorer {
             }
         }
 
-        List<SearchResponse> result= new ArrayList<>();
-        for (Map.Entry<Integer,Double> entry : scores.entrySet()){
+        List<SearchResponse> result = new ArrayList<>();
+        for (Map.Entry<Integer, Double> entry : scores.entrySet()) {
             SearchResponse searchResponse = SearchResponse.builder().score(entry.getValue()).documentId(entry.getKey()).build();
             result.add(searchResponse);
         }
@@ -58,11 +58,11 @@ public class Scorer {
             }
 
         }
-            List<SearchResponse> result= new ArrayList<>();
-            for (Map.Entry<Integer,Double> entry : scores.entrySet()){
-                SearchResponse searchResponse = SearchResponse.builder().score(entry.getValue()).documentId(entry.getKey()).build();
-                result.add(searchResponse);
-            }
+        List<SearchResponse> result = new ArrayList<>();
+        for (Map.Entry<Integer, Double> entry : scores.entrySet()) {
+            SearchResponse searchResponse = SearchResponse.builder().score(entry.getValue()).documentId(entry.getKey()).build();
+            result.add(searchResponse);
+        }
         return result;
     }
 
