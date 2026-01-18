@@ -9,10 +9,14 @@ import java.util.Map;
 
 @Component
 public class InvertedIndex {
-    private final Map<String, List<Posting>> index = new HashMap<>();
+    private Map<String, List<Posting>> index = new HashMap<>();
 
     public Map<String, List<Posting>> getIndex() {
         return index;
+    }
+
+    public void setIndex(Map<String, List<Posting>> i) {
+        index = i;
     }
 
     public boolean containsTerm(String term) {

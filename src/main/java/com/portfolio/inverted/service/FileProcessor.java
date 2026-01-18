@@ -1,17 +1,18 @@
 package com.portfolio.inverted.service;
 
 import com.portfolio.inverted.entity.FileDetails;
+import com.portfolio.inverted.entity.Posting;
 import com.portfolio.inverted.utils.FileIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FileProcessor {
@@ -38,8 +39,23 @@ public class FileProcessor {
                     document.addAll(analyser.onlyWords(line));
                 }
                 addFileToFileIndex(path, docId, document.size());
-                indexer.createIndex(document, docId);
-
+                Map<String, List<Posting>> index = indexer.createIndex(document, docId);
+                String instant = Instant
+                        .now()
+                        .truncatedTo(ChronoUnit.SECONDS)
+                        .toString()
+                        .replaceAll("[:TZ-]", "");
+                try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("O://Portfolio//Inverted//src//main//resources//index//index" + instant + ".dat"))) {
+                    try {
+                        oos.writeObject(index);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
 
             } catch (IOException e) {
                 log.error("FileNotFoundException", e);

@@ -20,6 +20,9 @@ public class AppRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+//        Path indexPath= Path.of("O://Portfolio//Inverted//src//main//resources//index//");
+
+
         List<String> paths = List.of(
                 "O://Portfolio//Inverted//src//main//resources//test-1.txt",
                 "O://Portfolio//Inverted//src//main//resources//test-2.txt",

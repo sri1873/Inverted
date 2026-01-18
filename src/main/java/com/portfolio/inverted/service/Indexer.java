@@ -22,7 +22,7 @@ public class Indexer {
         this.invertedIndex = invertedIndex;
     }
 
-    public void createIndex(List<String> document, Integer docId) {
+    public Map<String, List<Posting>> createIndex(List<String> document, Integer docId) {
         Map<String, List<Posting>> index = invertedIndex.getIndex();
         Integer position = 0;
         for (String term : document) {
@@ -36,13 +36,15 @@ public class Indexer {
             posting.setTermFrequency(posting.getTermFrequency() + 1);
             position++;
         }
+        return index;
     }
 
-    public void printIndex() {
+    public Map<String, List<Posting>> printIndex() {
         log.info("PRINT INDEX");
         for (Map.Entry<String, List<Posting>> entry : invertedIndex.getIndex().entrySet()) {
             log.info(entry.getKey() + ":" + entry.getValue());
         }
+        return invertedIndex.getIndex();
     }
 
 }
